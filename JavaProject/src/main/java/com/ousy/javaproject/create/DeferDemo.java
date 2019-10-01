@@ -33,7 +33,6 @@ public class DeferDemo {
 //            }
 //        });
 
-        num = 20;
         observable.subscribe(new Consumer<Integer>() {
             @Override
             public void accept(Integer num) throws Exception {

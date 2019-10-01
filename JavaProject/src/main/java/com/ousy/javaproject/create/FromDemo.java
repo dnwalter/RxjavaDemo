@@ -24,6 +24,8 @@ public class FromDemo {
         // 第二种写法
         Observable.fromArray(items).subscribe(num -> System.out.println(num+"*"));
 
+        List<Integer> list = Arrays.asList(1,2,3,4);
+        Observable.fromIterable(list).subscribe(num -> System.out.println(num+"*"));
         // future用法
 //        Observable.fromFuture(new Future<String>() {
 //        });

@@ -5,6 +5,8 @@ import java.util.List;
 
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.core.ObservableSource;
+import io.reactivex.rxjava3.core.Observer;
+import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.functions.Consumer;
 import io.reactivex.rxjava3.functions.Function;
 
@@ -23,10 +25,25 @@ public class FlatMapDemo {
                 }
                 return  Observable.fromIterable(list).map(num -> num+"+");
             }
-        }).subscribe(new Consumer<String>() {
+        }).subscribe(new Observer<String>() {
             @Override
-            public void accept(String s) throws Throwable {
+            public void onSubscribe(Disposable disposable) {
+
+            }
+
+            @Override
+            public void onNext(String s) {
                 System.out.println(s+"*");
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+
+            }
+
+            @Override
+            public void onComplete() {
+                System.out.println("完成");
             }
         });
     }
