@@ -2,10 +2,10 @@ package com.ousy.javaproject.change.entity;
 
 /**
  * @author ousiyuan
- * @date 2019/9/30
+ * @date 2019/10/9
  */
-public class Student extends Person{
-    public Student(String s){
+public class Teacher extends Person{
+    public Teacher(String s){
         name = s;
     }
 
