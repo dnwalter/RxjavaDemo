@@ -6,12 +6,15 @@ import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.core.ObservableEmitter;
 import io.reactivex.rxjava3.core.ObservableOnSubscribe;
 import io.reactivex.rxjava3.functions.BiFunction;
+import io.reactivex.rxjava3.functions.Consumer;
 import io.reactivex.rxjava3.functions.Function;
 import io.reactivex.rxjava3.schedulers.Schedulers;
+import javafx.beans.value.ObservableStringValue;
 
 /**
  * @author ousiyuan
  * @date 2019/10/10
+ * // join使用场景：如多个字符串用"+"连接 查看JoinExDemo
  */
 public class JoinDemo {
     public static void main(String[] args) {
@@ -62,15 +65,55 @@ public class JoinDemo {
 
         observable2.join(observable1, num -> {
                     System.out.println(num + "+");
-//                    return Observable.empty();
                     return Observable.timer(2000, TimeUnit.MILLISECONDS);
                 }, num -> {
                     System.out.println(num + "-");
                     return Observable.empty();
-//                    return Observable.timer(1000, TimeUnit.MILLISECONDS);
                 },
                 //结合上面发射的数据
                 (num1, num2) -> num1 +":"+ num2)
                 .subscribe(s -> System.out.println(s));
+
+        // 完整写法
+//        observable2.join(observable1, new Function<Integer, Observable>() {
+//            @Override
+//            public Observable apply(Integer o) throws Throwable {
+//                return Observable.timer(2000, TimeUnit.MILLISECONDS);
+//            }
+//        }, new Function<Integer, Observable>() {
+//            @Override
+//            public Observable apply(Integer o) throws Throwable {
+//                return Observable.empty();
+//            }
+//        }, new BiFunction<Integer, Integer, String>() {
+//            @Override
+//            public String apply(Integer num1, Integer num2) throws Throwable {
+//                return num1 +":"+ num2;
+//            }
+//        }).subscribe(s -> System.out.println(s));
+
+        // group的完整写法，lambda写法太难理解了，区别就是BiFunction的参数不一样
+        observable2.groupJoin(observable1, new Function<Integer, Observable>() {
+            @Override
+            public Observable apply(Integer o) throws Throwable {
+                return Observable.timer(2000, TimeUnit.MILLISECONDS);
+            }
+        }, new Function<Integer, Observable>() {
+            @Override
+            public Observable apply(Integer o) throws Throwable {
+                return Observable.empty();
+            }
+        }, new BiFunction<Integer, Observable<Integer>, Observable<String>>() {
+            @Override
+            public Observable<String> apply(Integer num1, Observable<Integer> observable) throws Throwable {
+                return observable.map(num2 -> num1+":"+num2);
+            }
+        }).subscribe(new Consumer<Observable<String>>() {
+            @Override
+            public void accept(Observable<String> observable) throws Throwable {
+                observable.subscribe(s -> System.out.println(s));
+            }
+        });
+
     }
 }
