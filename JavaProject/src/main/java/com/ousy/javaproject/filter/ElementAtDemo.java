@@ -38,7 +38,7 @@ public class ElementAtDemo {
                 });
 
         Observable.just(1, 2, 3, 4, 5, 6)
-                .elementAt(8, 0)
+                .elementAt(8,0)
                 .subscribe(new Consumer<Integer>() {
                     @Override
                     public void accept(Integer s) throws Exception {
