@@ -1,9 +1,11 @@
 package com.ousy.javaproject.assist;
 
 import java.util.List;
+import java.util.Map;
 
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.functions.Consumer;
+import io.reactivex.rxjava3.functions.Function;
 
 /**
  * @author ousiyuan
@@ -11,13 +13,23 @@ import io.reactivex.rxjava3.functions.Consumer;
  */
 public class ToDemo {
     public static void main(String[] args) {
-        Observable.just(1, 2, 3, 4).toList().subscribe(new Consumer<List<Integer>>() {
+//        Observable.just(1, 2, 3, 4).toList().subscribe(new Consumer<List<Integer>>() {
+//            @Override
+//            public void accept(List<Integer> integers) throws Throwable {
+//                System.out.println(integers.get(3)+"++");
+//            }
+//        });
+
+        Observable.just(1, 2, 3, 4).toMap(new Function<Integer, String>() {
             @Override
-            public void accept(List<Integer> integers) throws Throwable {
-                System.out.println(integers.get(3)+"++");
+            public String apply(Integer integer) throws Throwable {
+                return integer+"";
+            }
+        }).subscribe(new Consumer<Map<String, Integer>>() {
+            @Override
+            public void accept(Map<String, Integer> map) throws Throwable {
+                System.out.println(map.get("2")+"*");
             }
         });
-
-        // 还有toMap
     }
 }
